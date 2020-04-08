@@ -131,7 +131,7 @@ export default MyComponent;
 
 #### useStateEmit
 
-hook that return a useState tuple and emits event on setState;
+hook that returns a useState tuple and emits event on setState;
 
 __parameters:__
 
