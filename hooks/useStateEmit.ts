@@ -1,9 +1,10 @@
-import { useSocket, useStateOn } from ".";
+import { useState } from "react";
+import { useSocket } from "../";
 
-export type useStateSocketType = (event: string, initialState: any | (() => any), ...args: any[]) => [any, (any | ((prevState: any) => any))];
+export type useStateEmitType = (event: string, initialState: any | (() => any), ...args: any[]) => [any, (any | ((prevState: any) => any))];
 
-const useStateSocket: useStateSocketType = (event, initialState, ...args) => {
-    const [state, setState] = useStateOn(event, initialState);
+const useStateEmit: useStateEmitType = (event, initialState, ...args) => {
+    const [state, setState] = useState<any>(initialState);
     const socket = useSocket();
 
     const setStateEmit = (nextState: any | ((prevState: any) => any)) => {
@@ -22,4 +23,4 @@ const useStateSocket: useStateSocketType = (event, initialState, ...args) => {
     return [state, setStateEmit];
 };
 
-export default useStateSocket;
+export default useStateEmit;
