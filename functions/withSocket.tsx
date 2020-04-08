@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSocket } from "../hooks";
+import { useSocket } from "../";
 
 export interface WithSocketProps {
     socket: SocketIOClient.Socket;
