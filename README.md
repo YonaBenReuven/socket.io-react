@@ -142,7 +142,7 @@ const MyComponent = ({ id }) => {
 
     useEffect(() => {
         setInterval(() => {
-            // each time setCount is called it emits the 'count' event with the next state and the extra args;
+            // each time setCount is called it emits the 'count' event with the next state;
             // note: you can send extra arguments to the server;
             setCount((count) => count + 1, id);
         }, 1000);
@@ -172,7 +172,8 @@ const MyComponent = ({ id }) => {
 
     useEffect(() => {
         setInterval(() => {
-            // each time setCount is called it emits the 'count' event with the next state and the extra args;
+            // each time setCount is called it emits the 'count' event with the next state;
+            // note: you can send extra arguments to the server;
             setCount((count) => count + 1, id);
         }, 1000);
     }, []);
