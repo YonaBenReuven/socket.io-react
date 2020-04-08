@@ -1,12 +1,12 @@
 import { useSocket, useStateOn } from ".";
 
-export type useStateSocketType = (event: string, initialState: any | (() => any), ...args: any[]) => [any, (any | ((prevState: any) => any))];
+export type useStateSocketType = (event: string, initialState: any | (() => any)) => [any, (any | ((prevState: any) => any))];
 
-const useStateSocket: useStateSocketType = (event, initialState, ...args) => {
+const useStateSocket: useStateSocketType = (event, initialState) => {
     const [state, setState] = useStateOn(event, initialState);
     const socket = useSocket();
 
-    const setStateEmit = (nextState: any | ((prevState: any) => any)) => {
+    const setStateEmit = (nextState: any | ((prevState: any) => any), ...args: any[]) => {
         if (typeof nextState === "function") {
             setState((prevState: any) => {
                 const nextStateValue = nextState(prevState);

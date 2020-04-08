@@ -7,12 +7,12 @@ export const SocketContext = createContext<SocketContextValue>(null);
 
 export interface SocketProviderProps {
     uri: string;
-    opts?: SocketIOClient.ConnectOpts;
+    options?: SocketIOClient.ConnectOpts;
 };
 
-const SocketProvider: React.FC<SocketProviderProps> = ({ children, uri, opts }) => {
+const SocketProvider: React.FC<SocketProviderProps> = ({ children, uri, options }) => {
 
-    const socket = useMemo<SocketIOClient.Socket>(() => io.connect(uri, opts), []);
+    const socket = useMemo<SocketIOClient.Socket>(() => io.connect(uri, options), []);
 
     useEffect(() => {
         socket.on('disconnect', socket.removeAllListeners);
