@@ -84,13 +84,9 @@ const MyComponent = () => {
     });
 
     // increment gets called on the 'increment' event and when the div is clicked;
-    const increment = useOn(
-        "increment",
-        () => {
-            setCount(count + 1);
-        },
-        [count]
-    );
+    const increment = useOn("increment", () => {
+        setCount(count + 1);
+    }, [count]);
 
     return <div onClick={increment}>component using useOn</div>;
 };
@@ -100,7 +96,7 @@ export default MyComponent;
 
 #### useStateOn
 
-hook that listens to event and sets the state on the event;
+hook that combines useState and useOn: it listens to event and sets the state on the event;
 
 **parameters:**
 
@@ -126,7 +122,7 @@ export default MyComponent;
 
 #### useStateEmit
 
-hook that returns a useState tuple and emits event on setState;
+hook that returns a useState tuple and a function that sets the new state and emits it;
 
 **parameters:**
 
@@ -137,14 +133,14 @@ example:
 
 ```jsx
 const MyComponent = ({ id }) => {
-    // returns regular state tuple;
-    const [count, setCount] = useStateEmit("count", 0);
+    // returns regular useState tuple with the emitter;
+    const [count, setCount, setCountEmit] = useStateEmit("count", 0);
 
     useEffect(() => {
         setInterval(() => {
             // each time setCount is called it emits the 'count' event with the next state;
             // note: you can send extra arguments to the server;
-            setCount((count) => count + 1, id);
+            setCountEmit(count => count + 1, id);
         }, 1000);
     }, []);
 
@@ -167,14 +163,14 @@ example:
 
 ```jsx
 const MyComponent = ({ id }) => {
-    // returns regular state tuple and on the 'count' event it will set the state to the recieved argument;
-    const [count, setCount] = useStateSocket("count", 0);
+    // returns regular state tuple with the emitter and on the 'count' event it will set the state to the recieved argument;
+    const [count, setCount, setCountEmit] = useStateSocket("count", 0);
 
     useEffect(() => {
         setInterval(() => {
             // each time setCount is called it emits the 'count' event with the next state;
             // note: you can send extra arguments to the server;
-            setCount((count) => count + 1, id);
+            setCountEmit(count => count + 1, id);
         }, 1000);
     }, []);
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSocket } from "../";
 
-export type useStateEmitType = (event: string, initialState: any | (() => any)) => [any, (any | ((prevState: any) => any))];
+export type useStateEmitType = (event: string, initialState: any | (() => any)) => [any, React.Dispatch<any>, (any | ((prevState: any) => any))];
 
 const useStateEmit: useStateEmitType = (event, initialState) => {
     const [state, setState] = useState<any>(initialState);
@@ -20,7 +20,7 @@ const useStateEmit: useStateEmitType = (event, initialState) => {
         }
     };
 
-    return [state, setStateEmit];
+    return [state, setState, setStateEmit];
 };
 
 export default useStateEmit;
