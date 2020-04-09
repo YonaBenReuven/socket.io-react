@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from "react";
 import { useSocket } from ".";
 
-const useOn = (event: string, fn: (...args: any[]) => any, deps: React.DependencyList = []): (...args: any[]) => any => {
+const useOn = (event: string, fn: (...args: any[]) => any, deps: React.DependencyList | undefined): (...args: any[]) => any => {
 
     const socket = useSocket();
 
@@ -13,7 +13,7 @@ const useOn = (event: string, fn: (...args: any[]) => any, deps: React.Dependenc
         };
     }, []);
 
-    return useCallback<(...args: any[]) => any>(fn, deps);
+    return deps ? useCallback<(...args: any[]) => any>(fn, deps) : fn;
 };
 
 export default useOn;

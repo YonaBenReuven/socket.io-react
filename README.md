@@ -33,9 +33,11 @@ class MyComponent extends React.Component {
     constructor(props) {
         super(props);
     }
+
     componentDidMount() {
         this.props.socket.emit("hello");
     }
+    
     render() {
         return <div>component using withSocket</div>;
     }
@@ -69,8 +71,8 @@ hook that listens to event;
 **parameters:**
 
 -   event (required): the event to listen to;
--   fn (required): the listener function;
--   dependency list (default = []): the hook returns the listener wrapped by the useCallback hook. the dependency list is passed to useCallback;
+-   listener (required): the listener function;
+-   dependency list (optional): the hook returns the listener wrapped by the useCallback hook. the dependency list is passed to useCallback. if it's not provided it will just return the listener;
 
 example:
 
@@ -111,8 +113,8 @@ const MyComponent = () => {
     const [count, setCount] = useStateOn("count", 0);
 
     return (
-        <div onClick={() => setCount((count) => count + 1)}>
-            component using useOn
+        <div onClick={() => setCount(count => count + 1)}>
+            component using useStateOn
         </div>
     );
 };
@@ -144,7 +146,7 @@ const MyComponent = ({ id }) => {
         }, 1000);
     }, []);
 
-    return <div>component using useOn</div>;
+    return <div>component using useStateEmit</div>;
 };
 
 export default MyComponent;
@@ -174,7 +176,7 @@ const MyComponent = ({ id }) => {
         }, 1000);
     }, []);
 
-    return <div>component using useOn</div>;
+    return <div>component using useStateSocket</div>;
 };
 
 export default MyComponent;
