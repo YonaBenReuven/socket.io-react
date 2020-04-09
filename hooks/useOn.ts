@@ -13,7 +13,9 @@ const useOn = (event: string, fn: (...args: any[]) => any, deps: React.Dependenc
         };
     }, []);
 
-    return deps ? useCallback<(...args: any[]) => any>(fn, deps) : fn;
+    const memoizedFn = useCallback<(...args: any[]) => any>(fn, deps)
+
+    return deps ? memoizedFn : fn;
 };
 
 export default useOn;
