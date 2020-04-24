@@ -2,7 +2,106 @@
 
 ## socket io with react using hooks and context;
 
-### providing the socket:
+## Installation: `npm install socket.io`
+
+### Server Side
+
+#### Add to your boot function in server.js file:
+
+##### example for how the server.js would loop is in serverExample.js
+
+```js
+boot(app, __dirname, err => {
+    if (err) throw err;
+    if (require.main === module) {
+
+        // require('socket.io')(SERVER, OPTIONS);
+        // in loopback's case the SERVER is app.start();
+        // for the OPTIONS you can add { transports: ["websocket", "xhr-polling"] };
+        // this means you'll be using websocket instead of polling, recommended; 
+        const io = require('socket.io')(app.start(), {
+            transports: ["websocket", "xhr-polling"]
+        });
+
+        // setting this means that you can use the io instance anywhere you use app;
+        app.io = io;
+    }
+});
+```
+
+### Auth functions
+
+```js
+const cookieParser = require('cookie-parser');
+const cookie = require('cookie');
+```
+#### After setting the io instance:
+
+```js
+io.use((socket, next) => {
+    // you can access the cookies through socket.request.headers.cookie;
+    // call the next() function if the the client is authenticated;
+    // here's an example for authenticating in loopback;
+    (async () => {
+        try {
+            const accessToken = cookie.parse(socket.request.headers.cookie)['access_token'];
+            if (!accessToken) throw { message: "no access token" };
+            const { AccessToken } = app.models;
+            const token = cookieParser.signedCookie(decodeURIComponent(accessToken), app.get('cookieSecret'));
+            const res = await AccessToken.findById(token);
+            if (!res) throw { message: "incorrect access token" };
+            next();
+        } catch (err) {
+            console.log(err);
+        }
+    })();
+});
+```
+
+#### If you want to listen to changes to models add this:
+
+```js
+const afterHookEmit = require(FILE_PATH);
+```
+### After setting `app.io = io;`
+```js
+afterHookEmit(app, MODELS);
+```
+
+###  MODELS Example:
+
+```js
+const MODELS = [
+    {
+        model: "AssistantRides", // The model name;
+        room: "Rides", // the name of the room to send the data to. Default to the model name;
+        roomId: "rideId", // The name of the room Id. default to "id";
+        include: ["assistants", "rides"], // Not required, can pass relations to include;
+    }
+];
+```
+Say we have the models AssistantRides and Rides. we want to listen for changes in AssistantRides and emit to the room name Rides.
+if the AssistantRides instance is like this 
+```js
+{ id: 234, rideId: 567, moreInfo: {} }
+```
+the emited event will be: `'Rides-567'` and will include the info that will look like this
+
+```js
+const data = {
+    model: "Rides",
+    method: "CREATE", // options: "CREATE" | "UPDATE" | "DELETE"
+    instance: { id: 234, rideId: 567, moreInfo: {} },
+    include: {
+        assistants: [{ info: "" }],
+        rides: { info: "" }
+    }
+}
+```
+
+### Client Side
+
+#### providing the socket:
 
 wrap your component tree with the SocketProvider component:
 
@@ -37,7 +136,7 @@ class MyComponent extends React.Component {
     componentDidMount() {
         this.props.socket.emit("hello");
     }
-    
+
     render() {
         return <div>component using withSocket</div>;
     }
@@ -86,9 +185,13 @@ const MyComponent = () => {
     });
 
     // increment gets called on the 'increment' event and when the div is clicked;
-    const increment = useOn("increment", () => {
-        setCount(count + 1);
-    }, [count]);
+    const increment = useOn(
+        "increment",
+        () => {
+            setCount(count + 1);
+        },
+        [count]
+    );
 
     return <div onClick={increment}>component using useOn</div>;
 };
@@ -113,7 +216,7 @@ const MyComponent = () => {
     const [count, setCount] = useStateOn("count", 0);
 
     return (
-        <div onClick={() => setCount(count => count + 1)}>
+        <div onClick={() => setCount((count) => count + 1)}>
             component using useStateOn
         </div>
     );
@@ -142,7 +245,7 @@ const MyComponent = ({ id }) => {
         setInterval(() => {
             // each time setCount is called it emits the 'count' event with the next state;
             // note: you can send extra arguments to the server;
-            setCountEmit(count => count + 1, id);
+            setCountEmit((count) => count + 1, id);
         }, 1000);
     }, []);
 
@@ -172,7 +275,7 @@ const MyComponent = ({ id }) => {
         setInterval(() => {
             // each time setCount is called it emits the 'count' event with the next state;
             // note: you can send extra arguments to the server;
-            setCountEmit(count => count + 1, id);
+            setCountEmit((count) => count + 1, id);
         }, 1000);
     }, []);
 
