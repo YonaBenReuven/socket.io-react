@@ -6,21 +6,20 @@
 
 ### Server Side
 
-#### Add to your boot function in server.js file:
-
 ##### example for how the server.js would loop is in serverExample.js
 
+#### Add to your boot function in server.js file:
+
 ```js
-boot(app, __dirname, err => {
+boot(app, __dirname, (err) => {
     if (err) throw err;
     if (require.main === module) {
-
         // require('socket.io')(SERVER, OPTIONS);
         // in loopback's case the SERVER is app.start();
         // for the OPTIONS you can add { transports: ["websocket", "xhr-polling"] };
-        // this means you'll be using websocket instead of polling, recommended; 
-        const io = require('socket.io')(app.start(), {
-            transports: ["websocket", "xhr-polling"]
+        // this means you'll be using websocket instead of polling, recommended;
+        const io = require("socket.io")(app.start(), {
+            transports: ["websocket", "xhr-polling"],
         });
 
         // setting this means that you can use the io instance anywhere you use app;
@@ -32,9 +31,10 @@ boot(app, __dirname, err => {
 ### Auth functions
 
 ```js
-const cookieParser = require('cookie-parser');
-const cookie = require('cookie');
+const cookieParser = require("cookie-parser");
+const cookie = require("cookie");
 ```
+
 #### After setting the io instance:
 
 ```js
@@ -44,10 +44,15 @@ io.use((socket, next) => {
     // here's an example for authenticating in loopback;
     (async () => {
         try {
-            const accessToken = cookie.parse(socket.request.headers.cookie)['access_token'];
+            const accessToken = cookie.parse(socket.request.headers.cookie)[
+                "access_token"
+            ];
             if (!accessToken) throw { message: "no access token" };
             const { AccessToken } = app.models;
-            const token = cookieParser.signedCookie(decodeURIComponent(accessToken), app.get('cookieSecret'));
+            const token = cookieParser.signedCookie(
+                decodeURIComponent(accessToken),
+                app.get("cookieSecret")
+            );
             const res = await AccessToken.findById(token);
             if (!res) throw { message: "incorrect access token" };
             next();
@@ -63,12 +68,14 @@ io.use((socket, next) => {
 ```js
 const afterHookEmit = require(FILE_PATH);
 ```
+
 ### After setting `app.io = io;`
+
 ```js
 afterHookEmit(app, MODELS);
 ```
 
-###  MODELS Example:
+### MODELS Example:
 
 ```js
 const MODELS = [
@@ -77,14 +84,17 @@ const MODELS = [
         room: "Rides", // the name of the room to send the data to. Default to the model name;
         roomId: "rideId", // The name of the room Id. default to "id";
         include: ["assistants", "rides"], // Not required, can pass relations to include;
-    }
+    },
 ];
 ```
+
 Say we have the models AssistantRides and Rides. we want to listen for changes in AssistantRides and emit to the room name Rides.
-if the AssistantRides instance is like this 
+if the AssistantRides instance is like this
+
 ```js
 { id: 234, rideId: 567, moreInfo: {} }
 ```
+
 the emited event will be: `'Rides-567'` and will include the info that will look like this
 
 ```js
@@ -94,9 +104,9 @@ const data = {
     instance: { id: 234, rideId: 567, moreInfo: {} },
     include: {
         assistants: [{ info: "" }],
-        rides: { info: "" }
-    }
-}
+        rides: { info: "" },
+    },
+};
 ```
 
 ### Client Side
