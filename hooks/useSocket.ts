@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { SocketContext } from "../";
-import { SocketContextValue } from "../SocketProvider";
+import { SocketContextValue, ExtendedSocket } from "../SocketProvider";
 
-const useSocket = (): SocketIOClient.Socket => useContext<SocketContextValue>(SocketContext)!;
+const useSocket = (): ExtendedSocket => useContext<SocketContextValue>(SocketContext)!;
 
 export default useSocket;

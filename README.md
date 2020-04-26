@@ -95,7 +95,7 @@ if the AssistantRides instance is like this
 { id: 234, rideId: 567, moreInfo: {} }
 ```
 
-the emited event will be: `'Rides-567'` and will include the info that will look like this
+the emited event will be: `'Rides'` and will be sent to the `'Rides-567'` room, and will include the info that will look like this
 
 ```js
 const data = {
@@ -131,7 +131,7 @@ options (optional): Any connect options that we want to pass along;
 
 ### consuming the socket:
 
-there are a few ways to consume the socket object;
+there are a few ways to consume the socket instance;
 
 1. the socket is provided with context so you can consume it via the SocketContext context object;
 

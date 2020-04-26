@@ -19,7 +19,7 @@ module.exports = (app, models) => {
 
                 const data = { model, method = ctx.isNewInstance ? "CREATE" : "UPDATE", instance: JSON.parse(JSON.stringify(ctx.instance)), include: included };
 
-                io.sockets.in(room).emit(`${room}-${ctx.instance[roomId]}`, data);
+                io.sockets.in(`${room}-${ctx.instance[roomId]}`).emit(room, data);
 
                 return;
             } catch (err) {
@@ -31,7 +31,7 @@ module.exports = (app, models) => {
 
         app.models[model].observe(`after delete`, (ctx, next) => {
             const data = { model, method: "DELETE", instance: ctx.where };
-            io.sockets.in(model).emit(`${model}-${ctx.where[roomId || Object.keys(ctx.where)[0]]}`, data);
+            io.sockets.in(`${model}-${ctx.where[roomId || Object.keys(ctx.where)[0]]}`).emit(model, data);
             next();
         });
     });
