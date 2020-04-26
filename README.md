@@ -14,18 +14,83 @@
 boot(app, __dirname, (err) => {
     if (err) throw err;
     if (require.main === module) {
-        // require('socket.io')(SERVER, OPTIONS);
+
+        // OPTIONS for Socket: you can add { transports: ["websocket", "xhr-polling"] };
+        // this means you'll be using websocket instead of polling (recommended);
+        const SocketOptions = { transports: ["websocket", "xhr-polling"] }; // ! Not required !
+        // you can read more about the options here: https://socket.io/docs/server-api/
+
+
+        // Here we need to add the Socket to our server, like so: require('socket.io')(SERVER, OPTIONS);
         // in loopback's case the SERVER is app.start();
-        // for the OPTIONS you can add { transports: ["websocket", "xhr-polling"] };
-        // this means you'll be using websocket instead of polling, recommended;
-        const io = require("socket.io")(app.start(), {
-            transports: ["websocket", "xhr-polling"],
-        });
+        const io = require("socket.io")(app.start(), SocketOptions);
 
         // setting this means that you can use the io instance anywhere you use app;
         app.io = io;
     }
 });
+```
+
+### Client Side
+
+#### providing the socket:
+
+wrap your component tree with the SocketProvider component:
+
+```jsx
+<SocketProvider uri="localhost:8080">
+    <App />
+</SocketProvider>
+```
+
+connecting to the socket depends on where you use SocketProvider;
+
+#### SocketProvider Props:
+
+uri (required): The uri that we'll connect to, including the namespace, where '/' is the default one (e.g. http://localhost:4000/somenamespace);
+
+options (optional): Any connect options that we want to pass along: https://socket.io/docs/client-api/#io-url-options
+
+### consuming the socket:
+
+there are a few ways to consume the socket instance;
+
+1. the socket is provided with context so you can consume it via the SocketContext context object;
+
+2. using the HOC withSocket you will recieve the socket via the socket prop:
+
+```jsx
+class MyComponent extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    componentDidMount() {
+        this.props.socket.emit("hello");
+    }
+
+    render() {
+        return <div>component using withSocket</div>;
+    }
+}
+
+export default withSocket(MyComponent);
+```
+
+3. using the hook useSocket you will recieve the socket:
+
+```jsx
+const MyComponent = () => {
+    const socket = useSocket();
+
+    useEffect(() => {
+        socket.emit("hello");
+    }, []);
+
+    return <div>component using useSocket</div>;
+};
+
+export default MyComponent;
 ```
 
 ### Auth functions
@@ -107,68 +172,6 @@ const data = {
         rides: { info: "" },
     },
 };
-```
-
-### Client Side
-
-#### providing the socket:
-
-wrap your component tree with the SocketProvider component:
-
-```jsx
-<SocketProvider uri="localhost:8080">
-    <App />
-</SocketProvider>
-```
-
-connecting to the socket depends on where you use SocketProvider;
-
-#### SocketProvider Props:
-
-uri (required): The uri that we'll connect to, including the namespace, where '/' is the default one (e.g. http://localhost:4000/somenamespace);
-
-options (optional): Any connect options that we want to pass along;
-
-### consuming the socket:
-
-there are a few ways to consume the socket instance;
-
-1. the socket is provided with context so you can consume it via the SocketContext context object;
-
-2. using the HOC withSocket you will recieve the socket via the socket prop:
-
-```jsx
-class MyComponent extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    componentDidMount() {
-        this.props.socket.emit("hello");
-    }
-
-    render() {
-        return <div>component using withSocket</div>;
-    }
-}
-
-export default withSocket(MyComponent);
-```
-
-3. using the hook useSocket you will recieve the socket:
-
-```jsx
-const MyComponent = () => {
-    const socket = useSocket();
-
-    useEffect(() => {
-        socket.emit("hello");
-    }, []);
-
-    return <div>component using useSocket</div>;
-};
-
-export default MyComponent;
 ```
 
 ### extra hooks:
