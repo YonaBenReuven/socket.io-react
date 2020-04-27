@@ -7,9 +7,6 @@
 const cookieParser = require('cookie-parser');
 const cookie = require('cookie');
 
-const afterHookEmit = require('./../src/modules/scocket.io/server/afterHookEmit');
-const socketIOGeneric = require('./../src/modules/scocket.io/server/socket.io-generic');
-
 // const app = module.exports = loopback();
 // app.use(express.json());
 // app.set('view engine', 'ejs');
@@ -43,10 +40,7 @@ const socketIOGeneric = require('./../src/modules/scocket.io/server/socket.io-ge
         // !setting this means that you can use the io instance anywhere you use app;
         app.io = io;
 
-    // ? < ---- EXTANTIONS --> 
-
-        // ! Adds basic events: 'JOIN_ROOM' and 'LEAVE_ROOM' that join and leave sockets in rooms;
-        socketIOGeneric(io);
+    // ? < ---- EXTANTIONS -->
 
         // ! you can access the cookies through socket.request.headers.cookie;
         // ! call the next() function if the the client is authenticated;
@@ -66,14 +60,5 @@ const socketIOGeneric = require('./../src/modules/scocket.io/server/socket.io-ge
                 }
             })();
         });
-
-        // ! HERE YOU CAN ADD YOUR OWN SOCKET.IO PAGE, LIKE THAT:
-        require('../MySocketIo.js')(app) // ! "MySocketIo.js" is your own extention to the socket.io model. 
-
-        // !EXPLAIN 
-        afterHookEmit(app, [
-            { model: "AssistantRides", room: "Rides", roomId: "rideId", include: ["assistants", "rides"]},
-            { model: "Rides", include: ["children"] }
-        ]);
    // }
 //});

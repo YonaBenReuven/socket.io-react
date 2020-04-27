@@ -11,7 +11,7 @@ Socket.IO enables real-time bidirectional event-based communication. It consists
 -   a Node.js server;
 -   a Javascript client side;
 
-socket.io an implementation of the Event-based architecture in JavaScript. this means listening and emitting events. let's look at an example that we know from vanilla JS:
+socket.io is an implementation of the Event-based architecture in JavaScript. this means listening and emitting events. let's look at an example that we know from vanilla JS:
 
 ```js
 window.addEventListener(SOME_EVENT, () => {
@@ -97,7 +97,7 @@ io.on("connection", (socket) => {
 });
 ```
 
-So now we we've seen how to emit back and forth between the client and the server. But, how do we communicate between different sockets in the client and the server;
+So now we've seen how to emit back and forth between the client and the server. But, how do we communicate between different sockets in the client and the server;
 
 There are many ways. Let's look at one:
 
@@ -108,7 +108,7 @@ There are many ways. Let's look at one:
 io.sockets.emit("foo");
 ```
 
-This isn't that great. The event gets emitted to all sockets. What if we had a case where we are listening for an event in a single socket and we use this metod. the event will be emitted back to the sender too:
+This isn't that great. The event gets emitted to all sockets. What if we had a case where we are listening for an event in a single socket and we use this method. the event will be emitted back to the sender too:
 
 ```js
 io.on("connection", (socket) => {
@@ -359,6 +359,8 @@ export default MyComponent;
 
 #### Now let's look at the extra exports in the client and server:
 
+### Client:
+
 ### extra hooks:
 
 #### useOn
@@ -483,20 +485,9 @@ const MyComponent = ({ id }) => {
 export default MyComponent;
 ```
 
-## Simple Examples In Client
+### Server:
 
-### Get Changes from server
-
-//here add simple example like we did in "bloop" page. getting data from model.
-שינויים מההוקים מהסרבר שבא בזמן אמת
-
-### Send And Get Real Time Data Between Two Clients
-
-כמו גוגל דוקס כזה שאני שולח אתה מקבל אתה שולח אני מקבל
-
-## Extra Addons to Server
-
-### Auth functions
+### Authentication:
 
 ```js
 const cookieParser = require("cookie-parser");
@@ -531,10 +522,12 @@ io.use((socket, next) => {
 });
 ```
 
-#### If you want to listen to changes to models add this:
+### Listening to changes to models:
+
+\*\*if you have data that changes every few seconds/milliseconds rather don't use this because the data will only be emitted when it's added to the server which can take a while;
 
 ```js
-const afterHookEmit = require(FILE_PATH);
+const afterHookEmit = require(afterHookEmit_FILE_PATH);
 ```
 
 ### After setting `app.io = io;`
@@ -575,4 +568,44 @@ const data = {
         rides: { info: "" },
     },
 };
+```
+
+#### In the client:
+
+```jsx
+import { withSocket } from "./${PATH}/modules/socket.io";
+
+class MyComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            assistants: []
+        };
+    }
+
+    componentDidMount() {
+        this.props.socket.on("Rides", (data) => {
+            const { assistants } = data.include;
+            this.setState({ assistants }));
+        });
+
+        let [rideId, error] = await Auth.superAuthFetch(`/api/Rides/getRideId`);
+        if (response.error || error) { console.error("ERR: ", error || response.error); return; }
+
+        // in the server you need to listen to the 'join' event and join the room;
+        this.props.socket.emit("join", `Rides-${rideId}`);
+    }
+
+    render() {
+        return (
+            <div>
+                {this.state.assistants.map((assistant) => (
+                    <div>{assistant}</div>
+                ))}
+            </div>
+        );
+    }
+}
+
+export default withSocket(MyComponent);
 ```
