@@ -1,9 +1,8 @@
 import React from 'react';
 import { useSocket } from "../";
-import { ExtendedSocket } from '../SocketProvider';
 
 export interface WithSocketProps {
-    socket: ExtendedSocket;
+    socket: SocketIOClient.Socket;
 }
 
 const withSocket = <P extends WithSocketProps = WithSocketProps>(Component: React.ComponentType<P>) => {
