@@ -6,13 +6,23 @@
 
 ## Table of contents:
 
--   [What is socket.io used for](#What-is-socket.io-used-for)
+-   [What is socket.io used for](#What-is-socketio-used-for)
 -   [Event-based architecture](#Event-based-architecture)
--   [socket.io](#socket.io)
-- - [in the client](#in-the-client)
-- - [in the server](#in-the-server)
-- [Rooms](#Rooms)
-
+-   [socket io explanation](#socket.io)
+-   -   [in the client](#in-the-client)
+-   -   [in the server](#in-the-server)
+-   [Rooms](#Rooms)
+-   [cheatsheet](#cheatsheet)
+-   [The Module](#the-module)
+-   -   [Installation](#installation)
+-   -   [Server Side](#Server-Side)
+-   -   [Client Side](#Client-Side)
+-   [Extra exports](#Extra-exports)
+-   -   [Client](#Client)
+-   -   [Server](#Server)
+-   -   -   [Authentication](#Authentication)
+-   -   -   [Listening to changes to models](#Listening-to-changes-to-models)
+-   -   -   -   [Listening in the client](#Listening-in-the-client)
 
 ## What is socket.io used for?
 
@@ -189,6 +199,8 @@ io.on("connection", (socket) => {
 
 Note that each socket in the server has a unique id and that socket is added to a room of that id. This means you can send to only one socket if you know what their id is;
 
+### cheatsheet
+
 Here is a cheatsheet that is included in the socket.io docs that explains all the different things you can do with emitting (the conept of namespaces is mentioned here but it isn't covered in this page):
 
 ```js
@@ -243,9 +255,13 @@ io.on("connection", (socket) => {
 });
 ```
 
-So that's the basics of socket.io. The client side is very simple. You have basic Event-based architecture like: emit, on, once, off, disconnect...
+So that's the basics of socket.io. The client side is very simple. You have basic Event-based architecture like: emit, on, once, off, disconnect... and the server is more complex: rooms, namespaces, emitting to certain clients...
 
-**Now le's look at this module!!**
+### The module
+
+**Now let's look at this module!!**
+
+### installation:
 
 ### Server Side
 
@@ -371,7 +387,9 @@ const MyComponent = ({ chatId }) => {
 export default MyComponent;
 ```
 
-## That's the end of how you implenent the socket in React and Loopback;
+That's the end of how you implenent the socket in React and Loopback;
+
+### Extra Exports
 
 #### Now let's look at the extra exports in the client and server:
 
@@ -561,7 +579,7 @@ const MODELS = [
         room: "Rides", // the name of the room to send the data to. Default to the model name;
         roomId: "rideId", // The name of the room Id. default to "id";
         include: ["assistants", "rides"], // Not required, can pass relations to include;
-        disableAfterDelete: true // default false; means that when an instance of a model is deleted it won't emit (kind of buggy so make true for the meantime);
+        disableAfterDelete: true, // default false; means that when an instance of a model is deleted it won't emit (kind of buggy so make true for the meantime);
     },
 ];
 ```
@@ -587,7 +605,7 @@ const data = {
 };
 ```
 
-#### In the client:
+#### Listening In the client:
 
 ```jsx
 import { withSocket } from "./${PATH}/modules/socket.io";
