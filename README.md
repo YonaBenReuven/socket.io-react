@@ -81,7 +81,7 @@ So how does this work in socket.io?
 
 Before we get into how you use socket.io with this module and loopback let's see how it works on its own:
 
-**in the client:**
+#### in the client:
 
 ```js
 import io from "socket.io-client";
@@ -102,7 +102,7 @@ socket.on("foo", () => {
 socket.emit("bar");
 ```
 
-**in the server:**
+#### in the server:**
 
 ```js
 const io = require("socket.io")(8080);
