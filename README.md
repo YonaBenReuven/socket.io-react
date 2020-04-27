@@ -102,7 +102,7 @@ socket.on("foo", () => {
 socket.emit("bar");
 ```
 
-#### in the server:**
+#### in the server:
 
 ```js
 const io = require("socket.io")(8080);
