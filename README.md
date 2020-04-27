@@ -2,7 +2,17 @@
 
 ## socket io with react using hooks and context;
 
-## Installation: `npm install socket.io`
+## Dependencies: `npm install socket.io`
+
+## Table of contents:
+
+-   [What is socket.io used for](#What-is-socket.io-used-for)
+-   [Event-based architecture](#Event-based-architecture)
+-   [socket.io](#socket.io)
+- - [in the client](#in-the-client)
+- - [in the server](#in-the-server)
+- [Rooms](#Rooms)
+
 
 ## What is socket.io used for?
 
@@ -11,7 +21,9 @@ Socket.IO enables real-time bidirectional event-based communication. It consists
 -   a Node.js server;
 -   a Javascript client side;
 
-socket.io is an implementation of the Event-based architecture in JavaScript. this means listening and emitting events. let's look at an example that we know from vanilla JS:
+socket.io is an implementation of the Event-based architecture in JavaScript. this means listening and emitting events. let's look at an example that we know from vanilla JS;
+
+### Event-based architecture:
 
 ```js
 window.addEventListener(SOME_EVENT, () => {
@@ -48,12 +60,14 @@ EM.off("foo");
 
 Pretty simple concept, right?
 
+### socket.io
+
 So how does this work in socket.io?
 
 -   in the client you are listening to events that are emitted from the server;
 -   in the server you are listening to events that are emitted from the client;
 
-**You can not emit and listen between clients with out the server!!**
+**You can't emit and listen between clients without the server!!**
 
 Before we get into how you use socket.io with this module and loopback let's see how it works on its own:
 
@@ -132,6 +146,8 @@ io.on("connection", (socket) => {
     });
 });
 ```
+
+#### Rooms
 
 A core concept in socket.io is rooms which is a way to group sockets together;
 Rooms are arbitrary channels that sockets can join and leave. Rooms are used to further-separate concerns. Rooms can only be joined on the server side. In the client there is no meaning to rooms. you can emit events to sockets that are in a certain room instead of sending to all sockets;
@@ -545,6 +561,7 @@ const MODELS = [
         room: "Rides", // the name of the room to send the data to. Default to the model name;
         roomId: "rideId", // The name of the room Id. default to "id";
         include: ["assistants", "rides"], // Not required, can pass relations to include;
+        disableAfterDelete: true // default false; means that when an instance of a model is deleted it won't emit (kind of buggy so make true for the meantime);
     },
 ];
 ```

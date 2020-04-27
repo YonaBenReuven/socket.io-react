@@ -1,9 +1,8 @@
-
 module.exports = (app, models) => {
     const { io } = app;
 
     // TODO Make sure everyone can add their own hooks so they can change what we wrote?
-    models.forEach(({ model, room = model, roomId = "id", include }) => {
+    models.forEach(({ model, room = model, roomId = "id", include, disableAfterDelete = false }) => {
         app.models[model].observe(`after save`, async ctx => {
             try {
                 if (!ctx.instance) return;
@@ -17,7 +16,7 @@ module.exports = (app, models) => {
                     })))).reduce(((r, c) => Object.assign(r, c)), {});
                 }
 
-                const data = { model, method = ctx.isNewInstance ? "CREATE" : "UPDATE", instance: JSON.parse(JSON.stringify(ctx.instance)), include: included };
+                const data = { model, method: ctx.isNewInstance ? "CREATE" : "UPDATE", instance: JSON.parse(JSON.stringify(ctx.instance)), include: included };
 
                 io.sockets.in(`${room}-${ctx.instance[roomId]}`).emit(room, data);
 
@@ -29,10 +28,20 @@ module.exports = (app, models) => {
 
         });
 
-        app.models[model].observe(`after delete`, (ctx, next) => {
-            const data = { model, method: "DELETE", instance: ctx.where };
-            io.sockets.in(`${model}-${ctx.where[roomId || Object.keys(ctx.where)[0]]}`).emit(model, data);
-            next();
-        });
+        // AssistantsRides ==> delete where {rideId: 2342, assistantId: 234};
+        // Ride ---> delete where {id: 23423}
+        if (!disableAfterDelete) {
+            app.models[model].observe(`after delete`, (ctx, next) => {
+                if (!ctx.where[roomId]) return next();
+                const data = { model, method: "DELETE", instance: ctx.where };
+                io.sockets.in(`${model}-${ctx.where[roomId]}`).emit(model, data);
+                next();
+            });
+        }
+        // app.models[model].observe(`after delete`, (ctx, next) => {
+        //     const data = { model, method: "DELETE", instance: ctx.where };
+        //     io.sockets.in(`${model}-${ctx.where[roomId || Object.keys(ctx.where)[0]]}`).emit(model, data);
+        //     next();
+        // });
     });
 };
