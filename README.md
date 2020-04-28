@@ -278,6 +278,7 @@ boot(app, __dirname, (err) => {
     if (require.main === module) {
         // OPTIONS for socket: you can add { transports: ["websocket", "xhr-polling"] };
         // this means you'll be using websocket instead of polling (recommended);
+        // NOTE you need to have the same transports in the client too;
         const options = { transports: ["websocket", "xhr-polling"] }; // ! Not required !
         // you can read more about the options here: https://socket.io/docs/server-api/
 
