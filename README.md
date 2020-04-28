@@ -18,7 +18,10 @@
 -   -   [Server Side](#Server-Side)
 -   -   [Client Side](#Client-Side)
 -   [Extra exports](#Extra-exports)
+-   -   [Generic events](#generic-events)
 -   -   [Client](#Client)
+-   -   -   [join and leave](#join-and-leave)
+-   -   -   [extra hooks](#extra-hooks)
 -   -   [Server](#Server)
 -   -   -   [Authentication](#Authentication)
 -   -   -   [Listening to changes to models](#Listening-to-changes-to-models)
@@ -391,9 +394,38 @@ That's the end of how you implenent the socket in React and Loopback;
 
 ### Extra Exports
 
+### Generic events:
+
+the file `genericEvents.js` includes some generic events like `'connection' 'disconnected'` and more. Other custom events are also included like `'JOIN' 'LEAVE'` events
+
 #### Now let's look at the extra exports in the client and server:
 
 ### Client:
+
+### join and leave:
+
+**We added two methods to the socket:**
+
+```ts
+/**
+* Emits the 'JOIN' event
+* @param name The name of the room that we want to join
+* @param fn An optional callback to call when we've joined the room. It should take an optional parameter, err, of a possible error
+* @return This Socket
+*/
+join(name: string | string[], fn?: (err?: any) => void): SocketIOClient.Socket;
+```
+
+```ts
+/**
+* Emits the 'LEAVE' event
+* @param name The name of the room to leave
+* @param fn An optional callback to call when we've left the room. It should take on optional parameter, err, of a possible error
+*/
+leave(name: string, fn?: Function): SocketIOClient.Socket;
+```
+
+Note that the socket will not join or leave the room. This is just in the client. If you want to join or leave a room you need to listen to the events in the server or import the `generic-io-server.js` file and pass the `io` to it.
 
 ### extra hooks:
 

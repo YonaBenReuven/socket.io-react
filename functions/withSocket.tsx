@@ -1,8 +1,9 @@
 import React from 'react';
-import { useSocket } from "../";
+
+import { useSocket, HilmaSocket } from "../";
 
 export interface WithSocketProps {
-    socket: SocketIOClient.Socket;
+    socket: HilmaSocket;
 }
 
 const withSocket = <P extends WithSocketProps = WithSocketProps>(Component: React.ComponentType<P>) => {

@@ -1,4 +1,5 @@
 import { useEffect, useCallback } from "react";
+
 import { useSocket } from ".";
 
 const useOn = (event: string, fn: (...args: any[]) => any, deps?: React.DependencyList): (...args: any[]) => any => {

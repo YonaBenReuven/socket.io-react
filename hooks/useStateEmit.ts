@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { useSocket } from "../";
 
 export type useStateEmitType = (event: string, initialState: any | (() => any)) => [any, React.Dispatch<any>, (any | ((prevState: any) => any))];

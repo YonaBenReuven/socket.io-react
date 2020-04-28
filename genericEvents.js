@@ -1,6 +1,6 @@
 const genericEvents = {
-    JOIN_ROOM: 'JOIN_ROOM',
-    LEAVE_ROOM: 'LEAVE_ROOM',
+    JOIN: 'JOIN',
+    LEAVE: 'LEAVE',
     CONNECTION: 'connection',
     DISCONNECTED: 'disconnected',
     DISCONNECT: 'disconnect'
