@@ -650,10 +650,10 @@ class MyComponent extends React.Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.props.socket.on("Rides", (data) => {
             const { assistants } = data.include;
-            this.setState({ assistants }));
+            this.setState({ assistants });
         });
 
         let [rideId, error] = await Auth.superAuthFetch(`/api/Rides/getRideId`);
