@@ -2,30 +2,31 @@
 
 ## socket io with react using hooks and context;
 
-## Dependencies: `npm install socket.io`
-
 ## Table of contents:
 
--   [What is socket.io used for](#What-is-socketio-used-for)
--   [Event-based architecture](#Event-based-architecture)
--   [socket io explanation](#socketio)
--   -   [in the client](#in-the-client)
--   -   [in the server](#in-the-server)
--   [Rooms](#Rooms)
--   [cheatsheet](#cheatsheet)
+-   [socket io](#socket-io)
+-   -   [What is socket.io used for](#What-is-socketio-used-for)
+-   -   [Event-based architecture](#Event-based-architecture)
+-   -   [socket io explanation](#socketio)
+-   -   -   [in the client](#in-the-client)
+-   -   -   [in the server](#in-the-server)
+-   -   [Rooms](#Rooms)
+-   -   [cheatsheet](#cheatsheet)
 -   [The Module](#the-module)
 -   -   [Installation](#installation)
 -   -   [Server Side](#Server-Side)
 -   -   [Client Side](#Client-Side)
--   [Extra exports](#Extra-exports)
--   -   [Generic events](#generic-events)
--   -   [Client](#Client)
--   -   -   [join and leave](#join-and-leave)
--   -   -   [extra hooks](#extra-hooks)
--   -   [Server](#Server)
--   -   -   [Authentication](#Authentication)
--   -   -   [Listening to changes to models](#Listening-to-changes-to-models)
--   -   -   -   [Listening in the client](#Listening-in-the-client)
+-   -   [Extra exports](#Extra-exports)
+-   -   -   [Generic events](#generic-events)
+-   -   -   [Client](#Client)
+-   -   -   -   [join and leave](#join-and-leave)
+-   -   -   -   [extra hooks](#extra-hooks)
+-   -   -   [Server](#Server)
+-   -   -   -   [Authentication](#Authentication)
+-   -   -   -   [Listening to changes to models](#Listening-to-changes-to-models)
+-   -   -   -   -   [Listening in the client](#Listening-in-the-client)
+
+# socket io
 
 ## What is socket.io used for?
 
@@ -260,11 +261,13 @@ io.on("connection", (socket) => {
 
 So that's the basics of socket.io. The client side is very simple. You have basic Event-based architecture like: emit, on, once, off, disconnect... and the server is more complex: rooms, namespaces, emitting to certain clients...
 
-### The module
+# The module
 
 **Now let's look at this module!!**
 
 ### installation:
+
+if the `installDependencies.sh` script doesn't run automatically then run it your self
 
 ### Server Side
 
@@ -647,7 +650,7 @@ class MyComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            assistants: []
+            assistants: [],
         };
     }
 
@@ -658,7 +661,10 @@ class MyComponent extends React.Component {
         });
 
         let [rideId, error] = await Auth.superAuthFetch(`/api/Rides/getRideId`);
-        if (response.error || error) { console.error("ERR: ", error || response.error); return; }
+        if (response.error || error) {
+            console.error("ERR: ", error || response.error);
+            return;
+        }
 
         // in the server you need to listen to the 'join' event and join the room;
         this.props.socket.emit("join", `Rides-${rideId}`);
