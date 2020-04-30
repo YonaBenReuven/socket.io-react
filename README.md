@@ -430,7 +430,7 @@ leave(name: string, fn?: Function): Promise<void>;
 getRooms(): Promise<{ [id: string]: string; }>;
 ```
 
-Note that the socket will not join or leave or get the rooms the room. This is just in the client. If you want the functionality you need to listen to the events in the server or import the `generic-io-server.js` file and pass the `io` to it.
+Note that the socket will not join or leave or get the rooms. This is just in the client. If you want the functionality you need to listen to the events in the server or import the `generic-io-server.js` file and pass the `io` to it.
 
 If you include the `generic-io-server.js` file you will get this functionality:
 
