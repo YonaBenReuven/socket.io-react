@@ -16,8 +16,8 @@ module.exports = io => {
         });
 
         // on the 'GET_ROOMS' resolves the rooms of the socket;
-        socket.on(GET_ROOMS, resolve => {
-            resolve(socket.rooms);
-        })
+        socket.on(GET_ROOMS, fn => {
+            fn(socket.rooms);
+        });
     });
 };

@@ -436,7 +436,7 @@ If you include the `generic-io-server.js` file you will get this functionality:
 
 -   `join` will return a promise so you can `await` it, if there is an error, the promise will get rejected. if you prefer, you can pass a callback that recieves the err.
 -   `leave` will return a promise so you can `await` it, if you prefer, you can pass a callback
--   `getRooms` will return a promise so you can `await` it. The resolved value will be the rooms the socket is in, in the server.
+-   `getRooms` will return a promise so you can `await` it. The resolved value will be the rooms the socket is in, in the server. if you prefer, you can pass a callback that recieves the rooms.
 
 ### extra hooks:
 

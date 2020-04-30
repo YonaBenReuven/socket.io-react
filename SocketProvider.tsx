@@ -5,6 +5,8 @@ import genericEvents from './genericEvents';
 
 const { JOIN, LEAVE, GET_ROOMS } = genericEvents;
 
+export type SocketRooms = { [id: string]: string; };
+
 export interface HilmaSocket extends SocketIOClient.Socket {
     /**
     * Emits the 'JOIN' event
@@ -19,11 +21,11 @@ export interface HilmaSocket extends SocketIOClient.Socket {
     * @param fn An optional callback to call when we've left the room. It should take on optional parameter, err, of a possible error
     */
     leave(name: string, fn?: Function): Promise<void>;
-    
+
     /**
      * Emits the 'GET_ROOMS' event
      */
-    getRooms(): Promise<{ [id: string]: string; }>;
+    getRooms(fn?: (rooms: SocketRooms) => void): Promise<SocketRooms>;
 }
 
 export type SocketContextValue = HilmaSocket | null;
@@ -55,7 +57,12 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children, uri, options 
             });
         });
 
-        socket.getRooms = () => new Promise(resolve => socket.emit(GET_ROOMS, resolve));
+        socket.getRooms = (fn = () => { }) => new Promise(resolve => {
+            socket.emit(GET_ROOMS, (rooms: SocketRooms) => {
+                fn(rooms);
+                resolve(rooms);
+            });
+        });
 
         return socket;
     }, []);
