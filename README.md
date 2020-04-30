@@ -417,6 +417,7 @@ the file `genericEvents.js` includes some generic events like `'connection' 'dis
 * @param fn An optional callback to call when we've joined the room. It should take an optional parameter, err, of a possible error
 */
 join(name: string | string[], fn?: (err?: any) => void): Promise<void>;
+
 /**
 * Emits the 'LEAVE' event
 * @param name The name of the room to leave
@@ -427,7 +428,7 @@ leave(name: string, fn?: Function): Promise<void>;
 /**
  * Emits the 'GET_ROOMS' event
  */
-getRooms(): Promise<{ [id: string]: string; }>;
+getRooms(fn?: (rooms: SocketRooms) => void): Promise<SocketRooms>;
 ```
 
 Note that the socket will not join or leave or get the rooms. This is just in the client. If you want the functionality you need to listen to the events in the server or import the `generic-io-server.js` file and pass the `io` to it.
