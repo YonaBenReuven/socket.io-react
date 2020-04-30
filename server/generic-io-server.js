@@ -1,6 +1,6 @@
 const genericEvents = require('../genericEvents');
 
-const { CONNECTION, JOIN, LEAVE } = genericEvents;
+const { CONNECTION, JOIN, LEAVE, GET_ROOMS } = genericEvents;
 
 module.exports = io => {
 
@@ -14,5 +14,10 @@ module.exports = io => {
         socket.on(LEAVE, (name, fn) => {
             socket.leave(name, fn);
         });
+
+        // on the 'GET_ROOMS' resolves the rooms of the socket;
+        socket.on(GET_ROOMS, resolve => {
+            resolve(socket.rooms);
+        })
     });
 };
