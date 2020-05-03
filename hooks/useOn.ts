@@ -12,7 +12,7 @@ const useOn = (event: string, fn: (...args: any[]) => any, deps?: React.Dependen
         return () => {
             socket.off(event, fn);
         };
-    }, [event]);
+    }, [event, fn]);
 
     const memoizedFn = useCallback<(...args: any[]) => any>(fn, deps || []);
 

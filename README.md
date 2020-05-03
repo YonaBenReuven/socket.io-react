@@ -19,7 +19,7 @@
 -   -   [Extra exports](#Extra-exports)
 -   -   -   [Generic events](#generic-events)
 -   -   -   [Client](#Client)
--   -   -   -   [join, leave and getRooms](#join,-leave-and-getRooms)
+-   -   -   -   [join, leave and getRooms](#join-leave-and-getRooms)
 -   -   -   -   [extra hooks](#extra-hooks)
 -   -   -   [Server](#Server)
 -   -   -   -   [Authentication](#Authentication)
@@ -412,23 +412,28 @@ the file `genericEvents.js` includes some generic events like `'connection' 'dis
 
 ```ts
 /**
-* Emits the 'JOIN' event
-* @param name The name of the room that we want to join
-* @param fn An optional callback to call when we've joined the room. It should take an optional parameter, err, of a possible error
-*/
+ * Emits the 'JOIN' event
+ * @param name The name of the room that we want to join
+ * @param fn An optional callback to call when we've joined the room. It should take an optional parameter, err, of a possible error
+ */
 join(name: string | string[], fn?: (err?: any) => void): Promise<void>;
 
 /**
-* Emits the 'LEAVE' event
-* @param name The name of the room to leave
-* @param fn An optional callback to call when we've left the room. It should take on optional parameter, err, of a possible error
-*/
+ * Emits the 'LEAVE' event
+ * @param name The name of the room to leave
+ * @param fn An optional callback to call when we've left the room. It should take on optional parameter, err, of a possible error
+ */
 leave(name: string, fn?: Function): Promise<void>;
 
 /**
  * Emits the 'GET_ROOMS' event
  */
 getRooms(fn?: (rooms: SocketRooms) => void): Promise<SocketRooms>;
+
+/**
+ * Emits the 'LEAVE_ALL' event
+ */
+leaveAll(): void;
 ```
 
 Note that the socket will not join or leave or get the rooms. This is just in the client. If you want the functionality you need to listen to the events in the server or import the `generic-io-server.js` file and pass the `io` to it.
@@ -438,6 +443,7 @@ If you include the `generic-io-server.js` file you will get this functionality:
 -   `join` will return a promise so you can `await` it, if there is an error, the promise will get rejected. if you prefer, you can pass a callback that recieves the err.
 -   `leave` will return a promise so you can `await` it, if you prefer, you can pass a callback
 -   `getRooms` will return a promise so you can `await` it. The resolved value will be the rooms the socket is in, in the server. if you prefer, you can pass a callback that recieves the rooms.
+- `leaveAll` will leave all the rooms the socket is in.
 
 ### extra hooks:
 
