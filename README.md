@@ -408,7 +408,7 @@ the file `genericEvents.js` includes some generic events like `'connection' 'dis
 
 ### join, leave and getRooms:
 
-**We added three methods to the socket:**
+**We added four methods to the socket:**
 
 ```ts
 /**
